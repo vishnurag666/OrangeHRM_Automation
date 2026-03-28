@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { faker } from '@faker-js/faker';
 import { PageObjectManager } from "../PageObjects/PageObjectManager";
 
 test.describe('User Management Test Suite', () => {
@@ -6,6 +7,7 @@ test.describe('User Management Test Suite', () => {
     let loginPage;
     let dashboardPage;
     let adminPage;
+    let username;
 
     test.beforeEach(async ({ page }) => {
         pageObjectManager = new PageObjectManager(page);
@@ -19,6 +21,11 @@ test.describe('User Management Test Suite', () => {
         loginPage = pageObjectManager.getLoginPage();
         dashboardPage = pageObjectManager.getDashboardPage();
         adminPage = pageObjectManager.getAdminPage();
+         
+        //adding faker to generate random username for each test run, Minimum 5 characters to avoid validation error
+
+        username = faker.person.firstName() + faker.person.lastName();
+        console.log(username);
         
         // Verify page loads successfully with increased timeout
         await expect(page).toHaveTitle(/OrangeHRM/, { timeout: 20000 });
@@ -67,10 +74,10 @@ test.describe('User Management Test Suite', () => {
         
         // Wait for form to update and then fill username  
         await page.waitForTimeout(1000);
-        const uniqueUsername = `testuser${Date.now()}`;
-        await adminPage.txtUsername.fill(uniqueUsername);
+        
+        await adminPage.txtUsername.fill(username);
         // Verify the username field is filled correctly
-        await expect(adminPage.txtUsername).toHaveValue(uniqueUsername);
+        await expect(adminPage.txtUsername).toHaveValue(username);
 
         // Fill passwords
         await adminPage.txt_password.fill('Password@123');
