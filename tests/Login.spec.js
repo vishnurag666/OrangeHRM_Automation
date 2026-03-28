@@ -1,20 +1,27 @@
 import { expect, test } from '@playwright/test';
 import { PageObjectManager } from "../PageObjects/PageObjectManager";
 
+test.describe.configure({ mode: 'serial' });
 test.describe('Login Test Suite', () => {
     let pageObjectManager;
     let loginPage;
 
     test.beforeEach(async ({ page }) => {
         pageObjectManager = new PageObjectManager(page);
-        await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+        
+        // Navigate with increased timeout and proper wait strategy
+        await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login', {
+            waitUntil: 'domcontentloaded',
+            timeout: 60000
+        });
+        
         loginPage = pageObjectManager.getLoginPage();
         
-        // Verify page loads successfully
-        await expect(page).toHaveTitle(/OrangeHRM/);
-        await expect(loginPage.usernameInput).toBeVisible();
-        await expect(loginPage.passwordInput).toBeVisible();
-        await expect(loginPage.loginButton).toBeVisible();
+        // Verify page loads successfully with increased timeout
+        await expect(page).toHaveTitle(/OrangeHRM/, { timeout: 20000 });
+        await expect(loginPage.usernameInput).toBeVisible({ timeout: 20000 });
+        await expect(loginPage.passwordInput).toBeVisible({ timeout: 20000 });
+        await expect(loginPage.loginButton).toBeVisible({ timeout: 20000 });
     });
 
     // Authentication Tests

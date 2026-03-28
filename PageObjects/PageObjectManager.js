@@ -1,6 +1,7 @@
 
 import { LoginPage } from "./LoginPage";
 import { DashboardPage } from "./DashboardPage";
+import { AdminPage } from "./AdminPage";
 export class PageObjectManager{
     constructor(page){
         this.page = page;
@@ -12,5 +13,9 @@ export class PageObjectManager{
 
     getDashboardPage(){
         return new DashboardPage(this.page);
+    }
+
+    getAdminPage(){
+        return new AdminPage(this.page);
     }
 }
